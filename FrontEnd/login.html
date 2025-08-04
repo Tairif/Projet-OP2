@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="./assets/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+	<nav>
+		<ul>
+			<li>projets</li>
+			<li>contact</li>
+			<li>login</li>
+			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
+		</ul>
+	</nav>
+  </header>
+
+  <main class="login-section">
+  <h2>Log in</h2>
+  <form id="login-form" class="login-form">
+    <label for="email">E-mail</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="password">Mot de passe</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Se connecter</button>
+
+    <p class="forgot-password"><a href="#">Mot de passe oublié</a></p>
+  </form>
+
+  <!-- Paragraphe pour afficher les erreurs -->
+  <p id="error-message" style="color: red;"></p>
+</main>
+
+
+  <footer>
+    <nav>
+		<ul>
+			<li>Mentions Légales</li>
+		</ul>
+	</nav>
+  </footer>
+  <script src="/FrontEnd/login.js"></script>
+</body>
+</html>
