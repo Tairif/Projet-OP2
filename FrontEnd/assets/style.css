@@ -295,6 +295,38 @@ footer nav ul {
   cursor: pointer;
 }
 
+.modal-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-gallery figure {
+  width: 80px;
+  position: relative;
+}
+
+.modal-gallery img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  font-size: 10px;
+}
+
+
 /* Style poubelle */
 .modal-figure {
   position: relative;
