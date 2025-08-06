@@ -133,9 +133,10 @@ modal.addEventListener("click", (e) => {
 // 🔹 PARTIE 4 — MODALE : AFFICHAGE MINIATURES + SUPPRESSION //
 //////////////////////////////////////////////////////////
 
+// 🔁 Affiche les projets dans la modale (miniatures + poubelle)
 function afficherGalerieModale(works) {
   const modalGallery = document.querySelector(".modal-gallery");
-  modalGallery.innerHTML = ""; // Nettoie les miniatures
+  modalGallery.innerHTML = ""; // Vide l’ancienne galerie
 
   works.forEach(work => {
     const figure = document.createElement("figure");
@@ -145,13 +146,14 @@ function afficherGalerieModale(works) {
     img.src = work.imageUrl;
     img.alt = work.title;
 
+    // 🗑️ Bouton de suppression
     const deleteBtn = document.createElement("button");
     deleteBtn.classList.add("delete-btn");
     deleteBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
 
-    // ✅ Clique sur la poubelle = suppression
+    // 🔁 Clique sur la poubelle
     deleteBtn.addEventListener("click", () => {
-      supprimerTravail(work.id, figure);
+      supprimerTravail(work.id, figure); // Envoie à la fonction de suppression
     });
 
     figure.appendChild(img);
@@ -160,9 +162,10 @@ function afficherGalerieModale(works) {
   });
 }
 
-// ✅ Fonction qui supprime un projet dans l'API + DOM
+
+// ❌ Supprime un projet dans l’API et dans le DOM
 function supprimerTravail(id, element) {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token"); // récupère le token
 
   fetch(`http://localhost:5678/api/works/${id}`, {
     method: "DELETE",
@@ -172,14 +175,16 @@ function supprimerTravail(id, element) {
   })
     .then(response => {
       if (response.ok) {
-        element.remove(); // Supprime du DOM
+        element.remove(); // ✅ Supprime le projet dans la modale sans recharger
         console.log(`Projet ${id} supprimé avec succès.`);
       } else {
-        alert("Erreur lors de la suppression.");
+        console.error("Erreur serveur :", response.status);
+        alert("La suppression du projet a échoué.");
       }
     })
     .catch(error => {
-      alert("Erreur réseau.");
       console.error("Erreur réseau :", error);
+      alert("Une erreur est survenue lors de la suppression.");
     });
 }
+

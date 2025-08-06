@@ -326,6 +326,17 @@ footer nav ul {
   font-size: 10px;
 }
 
+/* Bouton de la modale */
+.modal-add-button {
+	width: 240px;
+	height: 35px;
+	border-radius: 60px;
+	align-items: center;
+	background-color: #1D6154;
+	color: #FFFFFF;
+}
+
+
 
 /* Style poubelle */
 .modal-figure {
