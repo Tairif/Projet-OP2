@@ -160,6 +160,10 @@ function afficherGalerieModale(works) {
     figure.appendChild(deleteBtn);
     modalGallery.appendChild(figure);
   });
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.classList.add("delete-btn");
+  deleteBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
 }
 
 
@@ -187,4 +191,147 @@ function supprimerTravail(id, element) {
       alert("Une erreur est survenue lors de la suppression.");
     });
 }
+
+// ==========================
+//  Étape 3.3 - Ajout projet
+// ==========================
+
+// Récupération des éléments HTML importants
+const modalViewGallery = document.querySelector(".modal-view-gallery"); // Vue avec miniatures
+const modalViewAdd = document.querySelector(".modal-view-add"); // Vue avec formulaire
+const addPhotoBtn = document.querySelector(".modal-add-button"); // Bouton "Ajouter une photo"
+const backBtn = document.querySelector(".modal-back-button"); // Bouton "Retour"
+const addForm = document.getElementById("add-form"); // Formulaire d'ajout
+
+// --------------------------
+// 1️⃣ Changement de vue
+// --------------------------
+
+// Quand on clique sur "Ajouter une photo"
+addPhotoBtn.addEventListener("click", () => {
+  modalViewGallery.style.display = "none"; // Cache la galerie
+  modalViewAdd.style.display = "block"; // Affiche le formulaire
+});
+
+// Quand on clique sur "← Retour"
+backBtn.addEventListener("click", () => {
+  modalViewAdd.style.display = "none"; // Cache le formulaire
+  modalViewGallery.style.display = "block"; // Affiche la galerie
+});
+
+// --------------------------
+// 2️⃣ Fonction utilitaire pour ajouter un projet dans la galerie principale
+// --------------------------
+function ajouterProjetDansGalerie(work) {
+  const gallery = document.querySelector(".gallery");
+
+  const figure = document.createElement("figure");
+  const img = document.createElement("img");
+  img.src = work.imageUrl;
+  img.alt = work.title;
+
+  const caption = document.createElement("figcaption");
+  caption.textContent = work.title;
+
+  figure.appendChild(img);
+  figure.appendChild(caption);
+  gallery.appendChild(figure);
+}
+
+// Fonction pour créer un projet dans la galerie modale
+function ajouterProjetDansModale(work) {
+  const modalGallery = document.querySelector(".modal-gallery");
+
+  const figure = document.createElement("figure");
+  figure.classList.add("modal-figure");
+
+  const img = document.createElement("img");
+  img.src = work.imageUrl;
+  img.alt = work.title;
+
+  // Bouton poubelle
+  const deleteBtn = document.createElement("button");
+  deleteBtn.classList.add("delete-btn");
+  deleteBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
+  deleteBtn.setAttribute("data-id", work.id);
+
+  deleteBtn.addEventListener("click", () => {
+    supprimerTravail(work.id, figure);
+  });
+
+  figure.appendChild(img);
+  figure.appendChild(deleteBtn);
+  modalGallery.appendChild(figure);
+}
+
+// 3️⃣ Envoi du formulaire
+
+addForm.addEventListener("submit", (e) => {
+  e.preventDefault(); // 🚫 Empêche le rechargement de la page
+
+  const token = localStorage.getItem("token"); // 🔑 Récupère le token
+  if (!token) {
+    alert("Vous devez être connecté pour ajouter un projet.");
+    return;
+  }
+
+  // 📦 On prépare les données à envoyer
+  const formData = new FormData();
+  formData.append("image", document.getElementById("image").files[0]);
+  formData.append("title", document.getElementById("title").value);
+  formData.append("category", document.getElementById("category").value);
+
+  // 🛑 Vérifie que tous les champs sont remplis
+  if (!formData.get("image") || !formData.get("title") || !formData.get("category")) {
+    alert("Veuillez remplir tous les champs.");
+    return;
+  }
+
+  // 🚀 Envoi au backend
+  fetch("http://localhost:5678/api/works", {
+    method: "POST",
+    body: formData,
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  })
+    .then(response => {
+      console.log("Statut HTTP :", response.status);
+
+      // ✅ Si le backend répond 200 ou 201 → succès
+      if (response.status === 200 || response.status === 201) {
+        // ⚠️ Si le backend ne renvoie pas de JSON, on évite l'erreur
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          return response.json(); // On retourne les données du nouveau projet
+        } else {
+          return {}; // Pas de JSON mais succès quand même
+        }
+      } else {
+        throw new Error("Erreur serveur : " + response.status);
+      }
+    })
+    .then(newWork => {
+      console.log("Nouveau projet :", newWork);
+
+      // 📌 Ajout direct dans la galerie principale
+      ajouterProjetDansGalerie(newWork);
+
+      // 📌 Recharge la galerie modale (tu peux la faire avec fetch si besoin)
+      fetch("http://localhost:5678/api/works")
+        .then(res => res.json())
+        .then(data => afficherGalerieModale(data));
+
+      // ♻️ Réinitialise le formulaire
+      addForm.reset();
+
+      // ↩️ Retour à la vue "Galerie photo"
+      modalViewAdd.style.display = "none";
+      modalViewGallery.style.display = "block";
+    })
+    .catch(error => {
+      console.error("Erreur :", error);
+      alert("Impossible d'ajouter le projet.");
+    });
+});
 

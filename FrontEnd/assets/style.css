@@ -338,19 +338,34 @@ footer nav ul {
 
 
 
-/* Style poubelle */
+/* Style poubelle dans la miniature des projets */
 .modal-figure {
   position: relative;
+  width: 80px;
+  margin: 10px;
+}
+
+.modal-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .delete-btn {
   position: absolute;
   top: 5px;
   right: 5px;
-  background: black;
-  border: none;
+  background-color: black;
   color: white;
+  border: none;
+  border-radius: 3px;
   padding: 5px;
   cursor: pointer;
-  border-radius: 3px;
+  font-size: 12px;
+  opacity: 0.8;
 }
+
+.delete-btn:hover {
+  opacity: 1;
+}
+

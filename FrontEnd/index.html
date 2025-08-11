@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="./assets/style.css">
 	<link rel="stylesheet" href="./assets/images/">
 	<script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+	<script src="https://kit.fontawesome.com/48d6a74d5e.js" crossorigin="anonymous"></script>
 </head>
 <body>
 	<div class="edition-bar" style="display: none;">
@@ -68,13 +69,44 @@
 <aside id="modal" class="modal" style="display: none;">
   <div class="modal-content">
     <span class="modal-close">&times;</span>
-    <h3>Galerie photo</h3>
-    <div class="modal-gallery">
-      <!-- Galerie modale ici -->
+
+    <!-- ===== Vue Galerie ===== -->
+    <div class="modal-view-gallery">
+      <h3>Galerie photo</h3>
+      <div class="modal-gallery">
+        <!-- Galerie modale ici -->
+      </div>
+      <button class="modal-add-button">Ajouter une photo</button>
     </div>
-    <button class="modal-add-button">Ajouter une photo</button>
+
+    <!-- ===== Vue Ajout Photo ===== -->
+    <div class="modal-view-add" style="display: none;">
+      <h3>Ajout photo</h3>
+      <form id="add-form">
+        <div>
+          <label for="image">Image</label>
+          <input type="file" id="image" name="image" accept="image/*" required>
+        </div>
+        <div>
+          <label for="title">Titre</label>
+          <input type="text" id="title" name="title" required>
+        </div>
+        <div>
+          <label for="category">Catégorie</label>
+          <select id="category" name="category" required>
+            <option value="">--Choisir une catégorie--</option>
+            <option value="1">Objets</option>
+            <option value="2">Appartements</option>
+            <option value="3">Hôtels & restaurants</option>
+          </select>
+        </div>
+        <button type="submit">Valider</button>
+      </form>
+      <button class="modal-back-button">← Retour</button>
+    </div>
   </div>
 </aside>
+
 
 
 <footer>
