@@ -7,6 +7,9 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+	integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<link rel="stylesheet" href="./assets/images/">
@@ -15,7 +18,7 @@
 </head>
 <body>
 	<div class="edition-bar" style="display: none;">
-  🛠 Mode édition
+		<div class="edition"> <i class="fa-regular fa-pen-to-square"></i> Mode édition</div>
 	</div>
 
 <header>
@@ -43,10 +46,10 @@
 	</section>
 	<section id="portfolio">
 		<div class="portfolio-header">
-			<h2>Mes Projets</h2> 
-    <button class="edit-button" style="display: none;">
-      <i class="fa-regular fa-pen-to-square"></i> Modifier
-    </button>
+			<h2>Mes Projets</h2>
+    	<button class="edit-button" style="display: none;">
+      	<i class="fa-regular fa-pen-to-square"></i> Modifier
+    	</button>
 		</div>
 		<div class="category-menu"></div>
 		<div class="gallery"></div>
@@ -76,11 +79,13 @@
       <div class="modal-gallery">
         <!-- Galerie modale ici -->
       </div>
+			<hr>
       <button class="modal-add-button">Ajouter une photo</button>
     </div>
 
     <!-- ===== Vue Ajout Photo ===== -->
     <div class="modal-view-add" style="display: none;">
+			<button class="modal-back-button">←</button>
       <h3>Ajout photo</h3>
       <form id="add-form">
         <div>
@@ -102,7 +107,6 @@
         </div>
         <button type="submit">Valider</button>
       </form>
-      <button class="modal-back-button">← Retour</button>
     </div>
   </div>
 </aside>

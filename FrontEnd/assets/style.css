@@ -31,6 +31,25 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 }
+.edition-bar {
+  height: 50px;
+  width: 100vw;
+}
+
+.edition {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 50px;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  z-index: 1000;
+}
 ol, ul {
 	list-style: none;
 }
@@ -263,6 +282,17 @@ footer nav ul {
   color: #1D6154;
   text-decoration: underline;
 }
+/* Projet / Modier */
+.portfolio-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-button {
+  border: none;
+  background: white;
+}
 
 /* modale */
 .modal {
@@ -271,69 +301,129 @@ footer nav ul {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0,0,0,0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
 }
 
+/* ===== Contenu de la modale ===== */
 .modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
+  background: #fff;
+  padding: 30px 40px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
   position: relative;
-  width: 500px;
-  max-width: 90%;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
+/* ===== Bouton de fermeture (croix) ===== */
 .modal-close {
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 15px;
+  right: 20px;
   font-size: 24px;
+  font-weight: bold;
+  color: #333;
   cursor: pointer;
 }
 
-.modal-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
+/* ===== Titre ===== */
+.modal-content h3 {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 25px;
+  color: #333;
+  font-weight: 600;
 }
 
-.modal-gallery figure {
-  width: 80px;
-  position: relative;
+/* ===== Galerie (vue 1) ===== */
+.modal-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  margin-bottom: 25px;
 }
 
 .modal-gallery img {
   width: 100%;
-  height: auto;
-  border-radius: 4px;
+  object-fit: cover;
 }
 
-.delete-btn {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  background: black;
-  color: white;
+hr {
+  border: none;        /* Supprime le style par défaut */
+  border-top: 1px solid #B3B3B3; /* Ligne fine grise */
+  margin: 20px 0;      /* Espacement autour */
+}
+
+
+/* ===== Bouton principal ===== */
+.modal-add-button,
+#add-form button[type="submit"] {
+  display: block;
+  margin: 20px auto 0;
+  padding: 12px 20px;
+  width: 240px;
   border: none;
-  border-radius: 50%;
-  padding: 4px;
+  border-radius: 60px;
+  background-color: #1D6154; /* Vert principal */
+  color: white;
+  font-size: 16px;
   cursor: pointer;
-  font-size: 10px;
+  transition: 0.3s;
+}
+.modal-back-button {
+    border: none;
 }
 
-/* Bouton de la modale */
-.modal-add-button {
-	width: 240px;
-	height: 35px;
-	border-radius: 60px;
-	align-items: center;
-	background-color: #1D6154;
-	color: #FFFFFF;
+.modal-add-button:hover,
+#add-form button[type="submit"]:hover {
+  background-color: #145b48;
+}
+
+/* ===== Bouton retour ===== */
+.modal-back-button {
+  background: none;
+  color: #1D6154;
+  font-weight: bold;
+  font-size: 15px;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+/* ===== Formulaire (vue 2) ===== */
+#add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+#add-form label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+#add-form input,
+#add-form select {
+  padding: 12px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+#add-form input:focus,
+#add-form select:focus {
+  border-color: #1D6154;
+}
+
+/* Bouton valider désactivé */
+#add-form button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 
