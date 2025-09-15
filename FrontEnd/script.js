@@ -12,36 +12,39 @@ fetch("http://localhost:5678/api/works")
   .then(data => {
     displayGallery(data);
 
-    // Création des filtres
-    const categories = [...new Set(data.map(work => work.category.name))];
-    const allBtn = document.createElement("button");
-    allBtn.textContent = "Tous";
-    allBtn.classList.add("active");
-    categoryMenu.appendChild(allBtn);
+    // ✅ On affiche les filtres seulement si pas connecté
+    if (!localStorage.getItem("token")) {
+      const categories = [...new Set(data.map(work => work.category.name))];
+      const allBtn = document.createElement("button");
+      allBtn.textContent = "Tous";
+      allBtn.classList.add("active");
+      categoryMenu.appendChild(allBtn);
 
-    categories.forEach(category => {
-      const btn = document.createElement("button");
-      btn.textContent = category;
-      categoryMenu.appendChild(btn);
-    });
+      categories.forEach(category => {
+        const btn = document.createElement("button");
+        btn.textContent = category;
+        categoryMenu.appendChild(btn);
+      });
 
-    // Filtrage
-    categoryMenu.addEventListener("click", (e) => {
-      if (e.target.tagName === "BUTTON") {
-        document.querySelectorAll(".category-menu button").forEach(btn => btn.classList.remove("active"));
-        e.target.classList.add("active");
+      // Filtrage
+      categoryMenu.addEventListener("click", (e) => {
+        if (e.target.tagName === "BUTTON") {
+          document.querySelectorAll(".category-menu button").forEach(btn => btn.classList.remove("active"));
+          e.target.classList.add("active");
 
-        const selected = e.target.textContent;
-        if (selected === "Tous") {
-          displayGallery(data);
-        } else {
-          const filtered = data.filter(work => work.category.name === selected);
-          displayGallery(filtered);
+          const selected = e.target.textContent;
+          if (selected === "Tous") {
+            displayGallery(data);
+          } else {
+            const filtered = data.filter(work => work.category.name === selected);
+            displayGallery(filtered);
+          }
         }
-      }
-    });
+      });
+    }
   })
   .catch(error => console.error("Erreur lors du fetch :", error));
+
 
 function displayGallery(works) {
   gallery.innerHTML = "";
@@ -203,7 +206,7 @@ addForm.addEventListener("submit", (e) => {
   }
 
   const formData = new FormData();
-  formData.append("image", document.getElementById("image").files[0]);
+  formData.append("image", fileInput.files[0]); // ✅ input caché
   formData.append("title", document.getElementById("title").value);
   formData.append("category", document.getElementById("category").value);
 
@@ -231,7 +234,7 @@ addForm.addEventListener("submit", (e) => {
         .then(data => afficherGalerieModale(data));
 
       addForm.reset();
-      resetImagePreview(document.getElementById("image-preview"));
+      resetImagePreview();
       modalViewAdd.style.display = "none";
       modalViewGallery.style.display = "block";
     })
@@ -242,52 +245,66 @@ addForm.addEventListener("submit", (e) => {
 });
 
 // ========================================================
-// 🔹 PARTIE 6 — PREVIEW IMAGE
+// 🔹 PARTIE 6 — PREVIEW IMAGE (corrigée pour ton HTML)
 // ========================================================
 
-function resetImagePreview(preview) {
-  preview.innerHTML = "";
-  preview.classList.remove("has-image");
+// On crée un input file caché pour remplacer le bouton "Ajouter photo"
+const fileInput = document.createElement("input");
+fileInput.type = "file";
+fileInput.accept = "image/jpeg, image/png";
+fileInput.id = "image"; // utile pour FormData
+fileInput.style.display = "none";
+document.body.appendChild(fileInput);
+
+const addButton = document.querySelector(".ajouter");       // bouton "+ Ajouter photo"
+const preview = document.getElementById("image-preview");   // conteneur preview
+const formatText = document.querySelector(".format_image"); // texte "jpg, png : 4mo max"
+
+let selectedFile = null;
+
+// Clic sur bouton → ouvre l'input caché
+addButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  fileInput.click();
+});
+
+// Quand un fichier est choisi
+fileInput.addEventListener("change", () => {
+  updateImageDisplay(fileInput.files);
+});
+
+// Fonction d'affichage de la preview
+function updateImageDisplay(files) {
+  if (files.length === 0) {
+    resetImagePreview();
+    return;
+  }
+
+  const file = files[0];
+  if (validFileType(file)) {
+    selectedFile = file;
+    addButton.style.display = "none";
+    formatText.style.display = "none";
+    preview.innerHTML = "";
+
+    const img = document.createElement("img");
+    img.src = window.URL.createObjectURL(file);
+    img.classList.add("preview-image");
+    preview.appendChild(img);
+  } else {
+    preview.innerHTML = `<p style="color:red;">Format non valide (jpg, png uniquement)</p>`;
+    selectedFile = null;
+  }
 }
 
-function handleFileInput(event) {
-  const preview = document.getElementById("image-preview");
-  const file = event.target.files[0];
-
-  if (!file) {
-    resetImagePreview(preview);
-    return;
-  }
-
-  const allowedTypes = ["image/jpeg", "image/png"];
-  const maxSizeInBytes = 4 * 1024 * 1024;
-
-  if (!allowedTypes.includes(file.type)) {
-    alert("Format invalide ! JPG ou PNG requis.");
-    event.target.value = "";
-    resetImagePreview(preview);
-    return;
-  }
-
-  if (file.size > maxSizeInBytes) {
-    alert("Fichier trop volumineux ! Maximum 4 Mo.");
-    event.target.value = "";
-    resetImagePreview(preview);
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    resetImagePreview(preview);
-    const imgPreview = document.createElement("img");
-    imgPreview.src = e.target.result;
-    imgPreview.alt = "Aperçu de l'image";
-    imgPreview.style.maxWidth = "150px";
-    imgPreview.style.borderRadius = "8px";
-    preview.appendChild(imgPreview);
-    preview.classList.add("has-image");
-  };
-  reader.readAsDataURL(file);
+function resetImagePreview() {
+  preview.innerHTML = '<p><i class="fa-solid fa-image"></i></p>';
+  addButton.style.display = "inline-block";
+  formatText.style.display = "block";
+  selectedFile = null;
 }
 
-document.getElementById("image").addEventListener("change", handleFileInput);
+const fileTypes = ["image/jpeg", "image/png"];
+function validFileType(file) {
+  return fileTypes.includes(file.type);
+}

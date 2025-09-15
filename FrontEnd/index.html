@@ -86,11 +86,16 @@
 		  <button class="modal-back-button">←</button>
 		  <h3>Ajout photo</h3>
 		  <form id="add-form">
-				<div>
-				  <input type="file" id="image" name="image" accept="image/*" required>
-				  <!-- Conteneur où on mettra la preview -->
-				  <div id="image-preview" class="preview-container"></div>
-				</div>
+  <div class="preview_modal">
+      <!-- Conteneur de preview -->
+      <div id="image-preview" class="image-preview">
+        <p><i id="font" class="fa-solid fa-image"></i></p>
+      </div>
+      <div>
+        <button class="ajouter">+ Ajouter photo</button>
+      </div>
+      <p class="format_image">jpg, png : 4mo max</p>
+  </div>
 
 		    <div>
 		      <label for="title">Titre</label>
